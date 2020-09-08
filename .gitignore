@@ -1,0 +1,4 @@
+/venv/
+.idea/
+*.iml
+/filesync/__pycache__/
