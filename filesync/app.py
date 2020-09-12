@@ -1,6 +1,7 @@
+import logging
 import os
+from logging import handlers
 
-from datetime import datetime
 from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 
@@ -10,6 +11,27 @@ app = Flask(__name__)
 app.config.from_object('settings')
 app.config.from_envvar('ENV_APP_SETTINGS')
 
+log = logging.getLogger('Rest_Api_app')
+log.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('[%(asctime)s]: {} %(levelname)s %(message)s'.format(os.getpid()),
+                              datefmt='%Y-%m-%d %H:%M:%S')
+
+consoleHandler = logging.StreamHandler()
+consoleHandler.setLevel(logging.DEBUG)
+consoleHandler.setFormatter(formatter)
+
+roleFileHandler = handlers.TimedRotatingFileHandler('logs/app.log',
+                                                    encoding='utf8',
+                                                    when='midnight',
+                                                    interval=1,
+                                                    backupCount=20)
+roleFileHandler.setLevel(logging.INFO)
+roleFileHandler.setFormatter(formatter)
+
+log.addHandler(roleFileHandler)
+log.addHandler(consoleHandler)
+
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -18,19 +40,9 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return 'OK'
-
-
-test_items = [
-    {
-        'name': '1',
-        'modified': datetime.now()
-    },
-    {
-        'name': '2',
-        'modified': datetime(2020, 9, 1, 16, 29, 43, 79043)
-    }
-]
+    log.debug('test debug')
+    log.warning('test warn')
+    return 'Api is running...', 200
 
 
 def get_file_items(folder_path):
@@ -54,6 +66,7 @@ def get_folder_items():
             # Bad request, 400
             return jsonify(message='ERROR - path attribute is missing'), 400
         path = request.form['path']
+        log.info(f'path: {path}')
         if path == '':
             # Bad request, 400
             return jsonify(message='ERROR - dest attribute is empty'), 400
@@ -68,23 +81,25 @@ def upload_file():
         # check if the post request has the file part
         if 'file' not in request.files:
             # Bad request, 400
-            return 'ERROR - file attribute is missing', 400
+            return jsonify(message='ERROR - file attribute is missing'), 400
         f = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
+        log.info(f'file name: {f.filename}')
         if f.filename == '':
-            return 'ERROR - file attribute is empty', 400
+            return jsonify(message='ERROR - file attribute is empty'), 400
         if 'dest' not in request.form:
             # Bad request, 400
-            return 'ERROR - dest attribute is missing', 400
+            return jsonify(message='ERROR - dest attribute is missing'), 400
         dest = request.form['dest']
+        log.info(f'dest: {dest}')
         if dest == '':
             # Bad request, 400
-            return 'ERROR - dest attribute is empty', 400
+            return jsonify(message='ERROR - dest attribute is empty'), 400
         if f and allowed_file(f.filename):
             filename = secure_filename(f.filename)
             f.save(os.path.join(dest, filename))
-            return 'OK', 200
+            return jsonify(message='OK'), 200
 
 
 if __name__ == '__main__':

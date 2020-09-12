@@ -2,3 +2,4 @@
 .idea/
 *.iml
 /filesync/__pycache__/
+/filesync/logs/
