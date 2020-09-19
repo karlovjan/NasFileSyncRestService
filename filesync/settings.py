@@ -1,4 +1,4 @@
-#default app configuration
+# default app configuration
 ENV = 'development'
 DEBUG = True
 SERVER_NAME = '127.0.0.1:5001'

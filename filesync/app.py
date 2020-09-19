@@ -11,8 +11,6 @@ app = Flask(__name__)
 app.config.from_object('settings')
 app.config.from_envvar('ENV_APP_SETTINGS')
 
-log = logging.getLogger('Rest_Api_app')
-log.setLevel(logging.DEBUG)
 
 formatter = logging.Formatter('[%(asctime)s]: {} %(levelname)s %(message)s'.format(os.getpid()),
                               datefmt='%Y-%m-%d %H:%M:%S')
@@ -29,6 +27,8 @@ roleFileHandler = handlers.TimedRotatingFileHandler('logs/app.log',
 roleFileHandler.setLevel(logging.INFO)
 roleFileHandler.setFormatter(formatter)
 
+log = logging.getLogger('Rest_Api_app')
+log.setLevel(logging.DEBUG)
 log.addHandler(roleFileHandler)
 log.addHandler(consoleHandler)
 
@@ -40,8 +40,7 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    log.debug('test debug')
-    log.warning('test warn')
+    log.info('test request to the root')
     return 'Api is running...', 200
 
 
