@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 from logging import handlers
@@ -10,7 +11,6 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4'}
 app = Flask(__name__)
 app.config.from_object('settings')
 app.config.from_envvar('ENV_APP_SETTINGS')
-
 
 formatter = logging.Formatter('[%(asctime)s]: {} %(levelname)s %(message)s'.format(os.getpid()),
                               datefmt='%Y-%m-%d %H:%M:%S')
@@ -50,7 +50,8 @@ def get_file_items(folder_path):
         for entry in it:
             if not entry.name.startswith('.') and entry.is_file():
                 from filesync.file_item import FileItem
-                items.append(FileItem(entry.name, os.lstat(os.path.join(folder_path, entry.name)).st_mtime))
+                items.append(FileItem(entry.name, datetime.datetime.fromtimestamp(
+                    os.lstat(os.path.join(folder_path, entry.name)).st_mtime).strftime('%Y-%m-%d %H:%M:%S')))
 
     return items
 
