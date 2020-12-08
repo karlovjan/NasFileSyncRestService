@@ -4,7 +4,11 @@ import os
 from logging import handlers
 
 from flask import Flask, request, jsonify
+from flask_cors import cross_origin
 from werkzeug.utils import secure_filename
+
+# https://flask-cors.readthedocs.io/en/latest/
+# TODO bezpecnost - security, mam povoleny CORS pro vsechny Origins
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4'}
 
@@ -60,6 +64,7 @@ def get_file_items(folder_path):
 
 
 @app.route('/folderItems', methods=['POST'])
+@cross_origin()
 def get_folder_items():
     if request.method == 'POST':
         if 'path' not in request.form:
@@ -71,11 +76,15 @@ def get_folder_items():
             # Bad request, 400
             return jsonify(message='ERROR - dest attribute is empty'), 400
         return jsonify([e.serialize() for e in get_file_items(path)])
+        # Enable Access-Control-Allow-Origin
+        # response.headers.add("Access-Control-Allow-Origin", "*")
+        # return response
     else:
         return jsonify({}), 400
 
 
 @app.route('/upload', methods=['POST'])
+@cross_origin()
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
