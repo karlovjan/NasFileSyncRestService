@@ -1,5 +1,5 @@
 /venv/
 .idea/
 *.iml
-/filesync/__pycache__/
-/filesync/logs/
+/nas_samba_rest/__pycache__/
+/nas_samba_rest/logs/

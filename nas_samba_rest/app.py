@@ -53,7 +53,7 @@ def get_file_items(folder_path):
     with os.scandir(folder_path) as it:
         for entry in it:
             if not entry.name.startswith('.') and entry.is_file():
-                from filesync.file_item import FileItem
+                from nas_samba_rest.file_item import FileItem
                 items.append(FileItem(entry.name, datetime.datetime.fromtimestamp(
                     os.lstat(os.path.join(folder_path, entry.name)).st_mtime).strftime('%Y-%m-%d %H:%M:%S')))
 
