@@ -10,11 +10,12 @@ from werkzeug.utils import secure_filename
 # https://flask-cors.readthedocs.io/en/latest/
 # TODO bezpecnost - security, mam povoleny CORS pro vsechny Origins
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4'}
 
 app = Flask(__name__)
-app.config.from_object('settings')
-app.config.from_envvar('ENV_APP_SETTINGS')
+# documentation to the configuration https://flask.palletsprojects.com/en/1.1.x/api/#configuration
+app.config.from_pyfile('settings.py')
+# before starting the app run in shell a command > export ENV_APP_SETTINGS='/path/to/config/file'
+# app.config.from_envvar('ENV_APP_SETTINGS')
 
 formatter = logging.Formatter('[%(asctime)s]: {} %(levelname)s %(message)s'.format(os.getpid()),
                               datefmt='%Y-%m-%d %H:%M:%S')
@@ -39,7 +40,7 @@ log.addHandler(consoleHandler)
 
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in app.config.get("ALLOWED_EXTENSIONS")
 
 
 @app.route('/')
@@ -50,17 +51,18 @@ def index():
 
 def get_file_items(folder_path):
     items = []
-    with os.scandir(folder_path) as it:
+    root_path = app.config["SAMBA_ROOT_FOLDER_PATH"]
+    with os.scandir(os.path.join(root_path, folder_path)) as it:
         for entry in it:
             if not entry.name.startswith('.') and entry.is_file():
                 from nas_samba_rest.file_item import FileItem
                 items.append(FileItem(entry.name, datetime.datetime.fromtimestamp(
-                    os.lstat(os.path.join(folder_path, entry.name)).st_mtime).strftime('%Y-%m-%d %H:%M:%S')))
+                    os.lstat(os.path.join(root_path, folder_path, entry.name)).st_mtime).strftime('%Y-%m-%d %H:%M:%S')))
 
     return items
 
 
-# curl -d path=/home/mbaros/Documents/scripts http://127.0.0.1:5001/folderItems
+# curl -d path=Documents/scripts http://127.0.0.1:5001/folderItems
 
 
 @app.route('/folderItems', methods=['POST'])
@@ -107,7 +109,7 @@ def upload_file():
             return jsonify(message='ERROR - dest attribute is empty'), 400
         if f and allowed_file(f.filename):
             filename = secure_filename(f.filename)
-            f.save(os.path.join(dest, filename))
+            f.save(os.path.join(app.config["SAMBA_ROOT_FOLDER_PATH"], dest, filename))
             return jsonify(message='OK'), 200
 
 

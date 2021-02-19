@@ -1,0 +1,32 @@
+https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html
+https://uwsgi-docs.readthedocs.io/en/latest/Options.html?highlight=manage-script-name
+
+pip install uwsgi
+
+or
+
+
+curl http://uwsgi.it/install | bash -s default /tmp/uwsgi
+
+
+standalone deploy Flask application
+
+uwsgi --socket 127.0.0.1:3031 --wsgi-file myflaskapp.py --callable app
+
+Multi task , monitoring on port 9191 accessed over Telnet
+uwsgi --socket 127.0.0.1:3031 --wsgi-file myflaskapp.py --callable app --processes 4 --threads 2 --stats 127.0.0.1:9191
+
+This will spawn 4 processes (each with 2 threads),
+a master process (will respawn your processes when they die) and the HTTP router (seen before).
+
+//TODO start uWSGI on restarting system, use systemd configuration
+
+//Run uWSGI as HTTP router
+https://flask.palletsprojects.com/en/1.1.x/deploying/uwsgi/
+https://uwsgi-docs.readthedocs.io/en/latest/HTTP.html#the-uwsgi-http-https-router
+
+uwsgi --http 127.0.0.1:5000 --module myproject:app
+
+uwsgi -s /tmp/yourapplication.sock --manage-script-name --mount /yourapplication=myapp:app
+
+-s is shortcut for uwsgi-socket
