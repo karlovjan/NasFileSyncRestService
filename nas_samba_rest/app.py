@@ -10,7 +10,6 @@ from werkzeug.utils import secure_filename
 # https://flask-cors.readthedocs.io/en/latest/
 # TODO bezpecnost - security, mam povoleny CORS pro vsechny Origins
 
-
 app = Flask(__name__)
 # documentation to the configuration https://flask.palletsprojects.com/en/1.1.x/api/#configuration
 app.config.from_pyfile('settings.py')
@@ -49,13 +48,26 @@ def index():
     return 'Api is running...', 200
 
 
+class FileItem:
+    """A file info class"""
+
+    def __init__(self, file_name, last_modified):
+        self.name = file_name
+        self.mtime = last_modified
+
+    def serialize(self):
+        return {
+            'name': self.name,
+            'mtime': self.mtime
+        }
+
+
 def get_file_items(folder_path):
     items = []
     root_path = app.config["SAMBA_ROOT_FOLDER_PATH"]
     with os.scandir(os.path.join(root_path, folder_path)) as it:
         for entry in it:
             if not entry.name.startswith('.') and entry.is_file():
-                from nas_samba_rest.file_item import FileItem
                 items.append(FileItem(entry.name, datetime.datetime.fromtimestamp(
                     os.lstat(os.path.join(root_path, folder_path, entry.name)).st_mtime).strftime('%Y-%m-%d %H:%M:%S')))
 

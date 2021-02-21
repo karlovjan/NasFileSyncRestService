@@ -15,13 +15,18 @@ Install virtual environment for my Python application in install app folder
 python3 -m venv ./venv
 
 Install in venv The container uWSGI for Flask app.
-pip install uwsgi
+pip install uwsgi flask
+pip install flask-cors
 
-or
+Create a log folder
+mkdir logs
 
+Test flask app
+(venv) > python myproject.py
 
-curl http://uwsgi.it/install | bash -s default /tmp/uwsgi
-
+from terminal run http request
+curl -d path=films http://nas.local:5001/folderItems
+curl -d path=films http://192.168.0.24:5001/folderItems
 
 standalone deploy Flask application
 
