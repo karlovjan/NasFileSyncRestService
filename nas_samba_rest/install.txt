@@ -1,6 +1,20 @@
 https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html
 https://uwsgi-docs.readthedocs.io/en/latest/Options.html?highlight=manage-script-name
 
+
+prerequisites for Python
+https://geektechstuff.com/2019/01/14/creating-a-virtual-python-environment-python/
+https://www.techcoil.com/blog/how-to-use-python-3-virtual-environments-to-run-python-3-applications-on-your-raspberry-pi/
+
+Install PIP
+sudo apt install python3-pip
+sudo apt install python3-venv
+
+Install virtual environment for my Python application in install app folder
+
+python3 -m venv ./venv
+
+Install in venv The container uWSGI for Flask app.
 pip install uwsgi
 
 or
@@ -30,3 +44,8 @@ uwsgi --http 127.0.0.1:5000 --module myproject:app
 uwsgi -s /tmp/yourapplication.sock --manage-script-name --mount /yourapplication=myapp:app
 
 -s is shortcut for uwsgi-socket
+
+
+Tutorial
+https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-20-04
+https://www.raspberrypi-spy.co.uk/2018/12/running-flask-under-nginx-raspberry-pi/
