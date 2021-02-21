@@ -67,7 +67,7 @@ def get_file_items(folder_path):
     root_path = app.config["SAMBA_ROOT_FOLDER_PATH"]
     with os.scandir(os.path.join(root_path, folder_path)) as it:
         for entry in it:
-            if not entry.name.startswith('.') and entry.is_file():
+            if not entry.name.startswith('.') and entry.is_file() and allowed_file(entry.name):
                 items.append(FileItem(entry.name, datetime.datetime.fromtimestamp(
                     os.lstat(os.path.join(root_path, folder_path, entry.name)).st_mtime).strftime('%Y-%m-%d %H:%M:%S')))
 
@@ -89,6 +89,7 @@ def get_folder_items():
         if path == '':
             # Bad request, 400
             return jsonify(message='ERROR - dest attribute is empty'), 400
+        # TODO spatna cestina u nazvu souboru, UTF8?
         return jsonify([e.serialize() for e in get_file_items(path)])
         # Enable Access-Control-Allow-Origin
         # response.headers.add("Access-Control-Allow-Origin", "*")
