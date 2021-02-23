@@ -45,8 +45,12 @@ source ./venv/bin/activate
 uwsgi --socket 192.168.0.24:5001 --protocol=http -w app:app
 
 Or create a uwsgi.ini file
-and launche it
+and launch it
 uwsgi --ini uwsgi.ini
+
+http support
+https://uwsgi-docs.readthedocs.io/en/latest/HTTP.html
+https://uwsgi-docs-additions.readthedocs.io/en/latest/Options.html#networking-sockets
 
 Multi task , monitoring on port 9191 accessed over Telnet
 uwsgi --socket 127.0.0.1:3031 --wsgi-file myflaskapp.py --callable app --processes 4 --threads 2 --stats 127.0.0.1:9191
