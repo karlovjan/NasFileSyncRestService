@@ -1,3 +1,6 @@
+Install folder on NAS
+cd gitrepos/NasFileSyncRestService/nas_samba_rest/
+
 https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html
 https://uwsgi-docs.readthedocs.io/en/latest/Options.html?highlight=manage-script-name
 
@@ -14,6 +17,9 @@ Install virtual environment for my Python application in install app folder
 
 python3 -m venv ./venv
 
+Activate virtual env
+source ./venv/bin/activate
+
 Install in venv The container uWSGI for Flask app.
 pip install uwsgi flask
 pip install flask-cors
@@ -28,9 +34,19 @@ from terminal run http request
 curl -d path=films http://nas.local:5001/folderItems
 curl -d path=films http://192.168.0.24:5001/folderItems
 
-standalone deploy Flask application
+Deactivate virtual env
+(venv) > deactivate
 
-uwsgi --socket 127.0.0.1:3031 --wsgi-file myflaskapp.py --callable app
+standalone deploy Flask application
+https://uwsgi-docs.readthedocs.io/en/latest/Options.html
+
+source ./venv/bin/activate
+
+uwsgi --socket 192.168.0.24:5001 --protocol=http -w app:app
+
+Or create a uwsgi.ini file
+and launche it
+uwsgi --ini uwsgi.ini
 
 Multi task , monitoring on port 9191 accessed over Telnet
 uwsgi --socket 127.0.0.1:3031 --wsgi-file myflaskapp.py --callable app --processes 4 --threads 2 --stats 127.0.0.1:9191
