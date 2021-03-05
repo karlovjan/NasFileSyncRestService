@@ -1,20 +1,31 @@
 import datetime
 import logging
 import os
+import ssl
 from logging import handlers
 
 from flask import Flask, request, jsonify
 from flask_cors import cross_origin
+from flask_talisman import Talisman
 from werkzeug.utils import secure_filename
+
+# https://docs.python.org/3/library/ssl.html
 
 # https://flask-cors.readthedocs.io/en/latest/
 # TODO bezpecnost - security, mam povoleny CORS pro vsechny Origins
 
 app = Flask(__name__)
+Talisman(app)
+
 # documentation to the configuration https://flask.palletsprojects.com/en/1.1.x/api/#configuration
-app.config.from_pyfile('settings.py')
+
 # before starting the app run in shell a command > export ENV_APP_SETTINGS='/path/to/config/file'
-# app.config.from_envvar('ENV_APP_SETTINGS')
+envConfigFile = os.environ['ENV_APP_SETTINGS']
+
+if envConfigFile:
+    app.config.from_pyfile(envConfigFile)
+else:
+    app.config.from_pyfile('settings.py')
 
 formatter = logging.Formatter('[%(asctime)s]: {} %(levelname)s %(message)s'.format(os.getpid()),
                               datefmt='%Y-%m-%d %H:%M:%S')
@@ -126,5 +137,17 @@ def upload_file():
             return jsonify(message='OK'), 200
 
 
+# context = None
+
+context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile=app.config.get("SERVER_CA"))
+context.verify_mode = ssl.CERT_REQUIRED
+
+try:
+    # context.load_cert_chain(certfile=app.config.get("SERVER_CRT"), keyfile=app.config.get("SERVER_KEY"),
+    # password=app.config.get("SERVER_KEY_PSW"))
+    context.load_cert_chain(certfile=app.config.get("SERVER_CRT"), keyfile=app.config.get("SERVER_KEY"))
+except Exception as e:
+    log.error("Error starting flask server. Missing cert or key. Details: {}", e)
+
 if __name__ == '__main__':
-    app.run()
+    app.run(ssl_context=context)

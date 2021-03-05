@@ -4,10 +4,102 @@ cd gitrepos/NasFileSyncRestService/nas_samba_rest/
 https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html
 https://uwsgi-docs.readthedocs.io/en/latest/Options.html?highlight=manage-script-name
 
+Set SECRET_KEY
+https://flask.palletsprojects.com/en/1.1.x/config/
+python -c 'import os; print(os.urandom(16))'
+
+SECRET_KEY = b'_5#y2L"F4Q8z\n\xec]/'
 
 prerequisites for Python
 https://geektechstuff.com/2019/01/14/creating-a-virtual-python-environment-python/
 https://www.techcoil.com/blog/how-to-use-python-3-virtual-environments-to-run-python-3-applications-on-your-raspberry-pi/
+
+Security
+https://flask.palletsprojects.com/en/1.1.x/security/
+https://github.com/GoogleCloudPlatform/flask-talisman
+
+pip install flask-talisman
+
+SSL
+https://www.openssl.org/
+https://www.openssl.org/docs/manmaster/
+https://linux.die.net/man/1/x509
+https://www.sslshopper.com/article-most-common-openssl-commands.html
+
+https://docs.python.org/3/library/ssl.html
+https://docs.python.org/3/library/ssl.html#security-considerations
+
+https://uwsgi-docs.readthedocs.io/en/latest/HTTPS.html
+
+https://curl.se/docs/manpage.html
+https://curl.se/docs/sslcerts.html
+
+https://blog.miguelgrinberg.com/post/running-your-flask-application-over-https
+https://carolinafernandez.github.io/development/2017/09/13/HTTPS-and-trust-chain-in-Flask
+https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uswgi-and-nginx-on-ubuntu-18-04#step-7-%E2%80%94-securing-the-application
+https://stackoverflow.com/questions/29458548/can-you-add-https-functionality-to-a-python-flask-web-server
+https://stackoverflow.com/questions/60694719/flask-application-using-tls
+https://stackoverflow.com/questions/59861685/how-to-run-flask-app-in-localhost-with-ssl
+https://everything.curl.dev/usingcurl/tls
+https://stackoverflow.com/questions/32253909/curl-with-a-pkcs12-certificate-in-a-bash-script
+
+(venv) pip install cryptography
+app.run(ssl_context='adhoc')
+
+curl with -k nebo --insecure -- "accept" self-signed certificates
+curl -k -d path=Documents/scripts https://127.0.0.1:5001/folderItems
+
+In folder ~/.ssh
+
+generovani CA and certificate
+openssl genrsa -des3 -out ca.key 4096
+-des3 vyzaduje zadat heslo
+password-protected: B   m  75...3
+
+openssl req -new -x509 -days 365 -key ca.key -out ca.crt
+vypln vsechny udaje
+CZ, Czechia, Prague, Baros, nas, nas.local, nas@nas.local
+
+
+Generate your server key, certificate signing request CSR
+
+openssl genrsa -out nasserver.key 2048
+openssl req -new -key nasserver.key -out nasserver.csr
+vypln vsechny udaje
+CZ, Czechia, Prague, Baros, nas, nas.local, nas@nas.local
+Extra attributes to be sent with your certificate request
+password  B   m  75...3
+Company name: Baros
+
+Sign the server certificate with your new CA
+
+openssl x509 -req -days 365 -in nasserver.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out nasserver.crt
+
+Create a key and a CSR for your client, sign it with your CA and package it as PKCS#12. Repeat these steps for each client.
+
+openssl genrsa -des3 -out iothubclient.key 2048
+passw... B    m 7 .. 3
+openssl genrsa -out iothubclient.key 2048
+Bez hesla
+openssl req -new -key iothubclient.key -out iothubclient.csr
+stejne jako u serveru jen se lisi organizace: iothubapp a CN je iothubapp
+Extra attributes nechavam prazdne
+
+openssl x509 -req -days 365 -in iothubclient.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out iothubclient.crt
+openssl pkcs12 -export -in iothubclient.crt -inkey iothubclient.key -name "IOT Hub Client" -out iothubclient.p12
+Export password je nezadan
+
+https://stackoverflow.com/questions/32253909/curl-with-a-pkcs12-certificate-in-a-bash-script
+
+scp -C -P 1222 pi@nas.local:.ssh/iothubclient.p12 /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs
+
+//locally on devel
+
+print requests and responses and verbose
+curl -iv --cert-type P12 --cert /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs/iothubclient.p12 --cacert /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs/ca.crt -d path=Documents/scripts https://localhost.localdomain:8443/folderItemsD
+
+openssl pkcs12 -in /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs/iothubclient.p12
+
 
 Install PIP
 sudo apt install python3-pip
@@ -27,6 +119,9 @@ pip install flask-cors
 Create a log folder
 mkdir logs
 
+Update project files
+git pull
+
 Test flask app
 (venv) > python myproject.py
 
@@ -40,7 +135,11 @@ Deactivate virtual env
 standalone deploy Flask application
 https://uwsgi-docs.readthedocs.io/en/latest/Options.html
 
+cd gitrepos/NasFileSyncRestService/nas_samba_rest/
+
 source ./venv/bin/activate
+
+export ENV_APP_SETTINGS='gitrepos/NasFileSyncRestService/nas_samba_rest/settings.test.py'
 
 uwsgi --socket 192.168.0.24:5001 --protocol=http -w app:app
 
@@ -69,6 +168,10 @@ uwsgi --http 127.0.0.1:5000 --module myproject:app
 uwsgi -s /tmp/yourapplication.sock --manage-script-name --mount /yourapplication=myapp:app
 
 -s is shortcut for uwsgi-socket
+
+
+uWSGI systemd configuration
+https://uwsgi-docs.readthedocs.io/en/latest/Systemd.html
 
 
 Tutorial

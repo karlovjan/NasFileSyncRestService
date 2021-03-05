@@ -3,3 +3,4 @@
 *.iml
 /nas_samba_rest/__pycache__/
 /nas_samba_rest/logs/
+/nas_samba_rest/certs/
