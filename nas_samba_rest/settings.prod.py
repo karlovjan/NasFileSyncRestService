@@ -5,9 +5,9 @@
 SERVER_NAME = 'nas.local:8443'
 
 
-SERVER_CA = '~/.ssh/ca.crt'
-SERVER_CRT = '~/.ssh/nasserver.crt'
-SERVER_KEY = '~/.ssh/nasserver.key'
+SERVER_CA = '/home/pi/.ssh/ca.crt'
+SERVER_CRT = '/home/pi/.ssh/nasserver.crt'
+SERVER_KEY = '/home/pi/.ssh/nasserver.key'
 
 # upload max 1 GB file
 MAX_CONTENT_LENGTH = 1 * 1024 * 1024 * 1024

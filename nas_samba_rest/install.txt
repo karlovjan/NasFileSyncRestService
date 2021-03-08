@@ -98,7 +98,13 @@ scp -C -P 1222 pi@nas.local:.ssh/iothubclient.p12 /home/mbaros/projects/my/pytho
 print requests and responses and verbose
 curl -iv --cert-type P12 --cert /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs/iothubclient.p12 --cacert /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs/ca.crt -d path=Documents/scripts https://localhost.localdomain:8443/folderItemsD
 
+nas.local
+curl -iv --cert-type P12 --cert /home/mbaros/projects/my/flutter/iothub/assets/certs/iothubclient.p12 --cacert /home/mbaros/projects/my/flutter/iothub/assets/certs/ca.crt -d path=films https://nas.local:8443/folderItems
+
 openssl pkcs12 -in /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs/iothubclient.p12
+
+print info about certificate
+ openssl x509 -text -noout -in ~/.ssh/nasserver.crt
 
 
 Install PIP
@@ -139,7 +145,7 @@ cd gitrepos/NasFileSyncRestService/nas_samba_rest/
 
 source ./venv/bin/activate
 
-export ENV_APP_SETTINGS='gitrepos/NasFileSyncRestService/nas_samba_rest/settings.test.py'
+export ENV_APP_SETTINGS='/home/pi/gitrepos/NasFileSyncRestService/nas_samba_rest/settings.test.py'
 
 uwsgi --socket 192.168.0.24:5001 --protocol=http -w app:app
 

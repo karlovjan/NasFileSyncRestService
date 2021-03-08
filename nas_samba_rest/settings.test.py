@@ -4,9 +4,9 @@
 ENV = 'development'
 DEBUG = False
 
-SERVER_CA = '~/.ssh/ca.crt'
-SERVER_CRT = '~/.ssh/nasserver.crt'
-SERVER_KEY = '~/.ssh/nasserver.key'
+SERVER_CA = '/home/pi/.ssh/ca.crt'
+SERVER_CRT = '/home/pi/.ssh/nasserver.crt'
+SERVER_KEY = '/home/pi/.ssh/nasserver.key'
 # SERVER_NAME = '192.168.0.24:5001'
 SERVER_NAME = 'nas.local:8443'
 # upload max 1 GB file
