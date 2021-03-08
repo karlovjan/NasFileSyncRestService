@@ -68,8 +68,8 @@ openssl req -new -key nasserver.key -out nasserver.csr
 vypln vsechny udaje
 CZ, Czechia, Prague, Baros, nas, nas.local, nas@nas.local
 Extra attributes to be sent with your certificate request
-password  B   m  75...3
-Company name: Baros
+password  empty
+Company name: empty
 
 Sign the server certificate with your new CA
 
@@ -82,7 +82,7 @@ passw... B    m 7 .. 3
 openssl genrsa -out iothubclient.key 2048
 Bez hesla
 openssl req -new -key iothubclient.key -out iothubclient.csr
-stejne jako u serveru jen se lisi organizace: iothubapp a CN je iothubapp
+stejne jako u serveru jen se lisi organizace: iothubapp a CN musi byt stejny jako u serveru a odpovidat adrese na kterou se budu pripojovat : nas.local
 Extra attributes nechavam prazdne
 
 openssl x509 -req -days 365 -in iothubclient.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out iothubclient.crt
