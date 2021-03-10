@@ -178,6 +178,10 @@ uwsgi -s /tmp/yourapplication.sock --manage-script-name --mount /yourapplication
 
 uWSGI systemd configuration
 https://uwsgi-docs.readthedocs.io/en/latest/Systemd.html
+https://blog.miguelgrinberg.com/post/running-a-flask-application-as-a-service-with-systemd
+https://kinvolk.io/docs/flatcar-container-linux/latest/setup/systemd/environment-variables/
+
+sudo journalctl -u microblog -f
 
 
 Tutorial

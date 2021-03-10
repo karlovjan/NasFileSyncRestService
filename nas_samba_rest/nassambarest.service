@@ -1,0 +1,19 @@
+[unit]
+Description=NAS Samba system REST Api service running by uWSGI server
+After=network.target
+
+[Service]
+User=pi
+Group=www-data
+WorkingDirectory=/home/pi/gitrepos/NasFileSyncRestService/nas_samba_rest
+Environment=ENV_APP_SETTINGS=/home/pi/gitrepos/NasFileSyncRestService/nas_samba_rest/settings.test.py
+#This is equivalent to activating the virtual environment
+ExecStart=/home/pi/gitrepos/NasFileSyncRestService/nas_samba_rest/venv/bin/uwsgi --ini uwsgi.ini
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+StandardError=syslog
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
