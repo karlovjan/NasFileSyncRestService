@@ -10,6 +10,10 @@ python -c 'import os; print(os.urandom(16))'
 
 SECRET_KEY = b'_5#y2L"F4Q8z\n\xec]/'
 
+If you have the debugger disabled or trust the users on your network,
+you can make the server publicly available simply by adding --host=0.0.0.0
+This tells your operating system to listen on all public IPs.
+
 prerequisites for Python
 https://geektechstuff.com/2019/01/14/creating-a-virtual-python-environment-python/
 https://www.techcoil.com/blog/how-to-use-python-3-virtual-environments-to-run-python-3-applications-on-your-raspberry-pi/
@@ -29,6 +33,7 @@ https://www.sslshopper.com/article-most-common-openssl-commands.html
 https://docs.python.org/3/library/ssl.html
 https://docs.python.org/3/library/ssl.html#security-considerations
 
+https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html
 https://uwsgi-docs.readthedocs.io/en/latest/HTTPS.html
 
 https://curl.se/docs/manpage.html
@@ -180,6 +185,19 @@ uWSGI systemd configuration
 https://uwsgi-docs.readthedocs.io/en/latest/Systemd.html
 https://blog.miguelgrinberg.com/post/running-a-flask-application-as-a-service-with-systemd
 https://kinvolk.io/docs/flatcar-container-linux/latest/setup/systemd/environment-variables/
+
+Unit configuration files are added in the /etc/systemd/system directory to be seen by systemd.
+
+sudo cp nassambarest.service /etc/systemd/system/
+
+Each time you add or modify a unit file you must tell systemd to refresh its configuration:
+
+$ sudo systemctl daemon-reload
+
+$ sudo systemctl start nassambarest
+$ sudo systemctl stop nassambarest
+$ sudo systemctl restart nassambarest
+$ sudo systemctl status nassambarest
 
 sudo journalctl -u microblog -f
 
