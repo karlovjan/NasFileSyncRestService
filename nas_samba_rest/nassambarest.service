@@ -1,4 +1,4 @@
-[unit]
+[Unit]
 Description=NAS Samba system REST Api service running by uWSGI server
 After=network.target
 
@@ -10,7 +10,6 @@ Environment=ENV_APP_SETTINGS=/home/pi/gitrepos/NasFileSyncRestService/nas_samba_
 #This is equivalent to activating the virtual environment
 ExecStart=/home/pi/gitrepos/NasFileSyncRestService/nas_samba_rest/venv/bin/uwsgi --ini uwsgi.ini
 Restart=always
-KillSignal=SIGQUIT
 Type=notify
 StandardError=syslog
 NotifyAccess=all

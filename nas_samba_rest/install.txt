@@ -183,7 +183,6 @@ uwsgi --socket 127.0.0.1:3031 --wsgi-file myflaskapp.py --callable app --process
 This will spawn 4 processes (each with 2 threads),
 a master process (will respawn your processes when they die) and the HTTP router (seen before).
 
-//TODO start uWSGI on restarting system, use systemd configuration
 
 //Run uWSGI as HTTP router
 https://flask.palletsprojects.com/en/1.1.x/deploying/uwsgi/
