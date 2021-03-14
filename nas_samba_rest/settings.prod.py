@@ -2,9 +2,9 @@
 # https://flask.palletsprojects.com/en/1.1.x/config/
 # production app configuration
 # SERVER_NAME = '192.168.0.24:5001 nas.local:5001'
-SERVER_NAME = 'smbrest:5443'
+SERVER_NAME = 'localhost:5001'
 
-
+HTTPS_ENABLE = False
 SERVER_CA = '/home/pi/.ssh/ca.crt'
 SERVER_CRT = '/home/pi/.ssh/nasserver.crt'
 SERVER_KEY = '/home/pi/.ssh/nasserver.key'

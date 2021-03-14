@@ -137,17 +137,19 @@ def upload_file():
             return jsonify(message='OK'), 200
 
 
-# context = None
+context = None
 
-context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile=app.config.get("SERVER_CA"))
-context.verify_mode = ssl.CERT_REQUIRED
+if app.config.get("HTTPS_ENABLE"):
+    context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH, cafile=app.config.get("SERVER_CA"))
+    context.verify_mode = ssl.CERT_REQUIRED
 
-try:
-    # context.load_cert_chain(certfile=app.config.get("SERVER_CRT"), keyfile=app.config.get("SERVER_KEY"),
-    # password=app.config.get("SERVER_KEY_PSW"))
-    context.load_cert_chain(certfile=app.config.get("SERVER_CRT"), keyfile=app.config.get("SERVER_KEY"))
-except Exception as e:
-    log.error("Error starting flask server. Missing cert or key. Details: {}", e)
+    try:
+        # context.load_cert_chain(certfile=app.config.get("SERVER_CRT"), keyfile=app.config.get("SERVER_KEY"),
+        # password=app.config.get("SERVER_KEY_PSW"))
+        context.load_cert_chain(certfile=app.config.get("SERVER_CRT"), keyfile=app.config.get("SERVER_KEY"))
+    except Exception as e:
+        log.error("Error starting flask server. Missing cert or key. Details: {}", e)
+
 
 if __name__ == '__main__':
     app.run(ssl_context=context)

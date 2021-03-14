@@ -35,6 +35,7 @@ https://docs.python.org/3/library/ssl.html#security-considerations
 
 https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html
 https://uwsgi-docs.readthedocs.io/en/latest/HTTPS.html
+https://uwsgi-docs.readthedocs.io/en/latest/Python.html
 
 https://curl.se/docs/manpage.html
 https://curl.se/docs/sslcerts.html

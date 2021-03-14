@@ -4,6 +4,7 @@
 ENV = 'development'
 DEBUG = True
 
+HTTPS_ENABLE = True
 SERVER_CA = 'certs/ca.crt'
 SERVER_CRT = 'certs/nasserver.crt'
 SERVER_KEY = 'certs/nasserver.key'

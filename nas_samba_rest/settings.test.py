@@ -4,13 +4,14 @@
 ENV = 'development'
 DEBUG = True
 
+HTTPS_ENABLE = False
 SERVER_CA = '/home/pi/.ssh/ca.crt'
 SERVER_CRT = '/home/pi/.ssh/nasserver.crt'
 SERVER_KEY = '/home/pi/.ssh/nasserver.key'
 # SERVER_NAME = '192.168.0.24:5001'
 # SERVER_NAME = 'nas.local:8443'
 
-SERVER_NAME = 'smbrest:5443'
+SERVER_NAME = 'localhost:5001'
 # upload max 1 GB file
 MAX_CONTENT_LENGTH = 1 * 1024 * 1024 * 1024
 JSON_AS_ASCII = True
