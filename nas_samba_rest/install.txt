@@ -239,6 +239,13 @@ list of all groups for a user
 
 add pi to the caddy's group
 
+Configuration Caddy
+sudo nano /etc/caddy/Caddyfile
+
+Reload the configuration:
+>sudo systemctl reload caddy
+
+
 Tutorial
 https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-20-04
 https://www.raspberrypi-spy.co.uk/2018/12/running-flask-under-nginx-raspberry-pi/
