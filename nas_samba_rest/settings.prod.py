@@ -2,7 +2,7 @@
 # https://flask.palletsprojects.com/en/1.1.x/config/
 # production app configuration
 # SERVER_NAME = '192.168.0.24:5001 nas.local:5001'
-SERVER_NAME = 'nas.local:8443'
+SERVER_NAME = 'smbrest:5443'
 
 
 SERVER_CA = '/home/pi/.ssh/ca.crt'

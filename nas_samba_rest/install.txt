@@ -48,6 +48,16 @@ https://stackoverflow.com/questions/59861685/how-to-run-flask-app-in-localhost-w
 https://everything.curl.dev/usingcurl/tls
 https://stackoverflow.com/questions/32253909/curl-with-a-pkcs12-certificate-in-a-bash-script
 
+root certificates folder
+/etc/ssl/certs
+
+Domena pro nas samba rest je
+smbrest
+
+na locale muzu udelat
+sudo nano /etc/hosts
+smbrest   127.0.0.1
+
 (venv) pip install cryptography
 app.run(ssl_context='adhoc')
 
@@ -97,6 +107,7 @@ Export password je nezadan
 https://stackoverflow.com/questions/32253909/curl-with-a-pkcs12-certificate-in-a-bash-script
 
 scp -C -P 1222 pi@nas.local:.ssh/iothubclient.p12 /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs
+scp -C -P 1222 pi@nas.local:.ssh/iothubclient.p12 /home/mbaros/projects/my/flutter/iothub/assets/certs/
 
 //locally on devel
 
@@ -105,6 +116,9 @@ curl -iv --cert-type P12 --cert /home/mbaros/projects/my/python/NasFileSyncRestS
 
 nas.local
 curl -iv --cert-type P12 --cert /home/mbaros/projects/my/flutter/iothub/assets/certs/iothubclient.p12 --cacert /home/mbaros/projects/my/flutter/iothub/assets/certs/ca.crt -d path=films https://nas.local:8443/folderItems
+
+nas localhost
+curl -iv --cert-type P12 --cert /home/pi/.ssh/iothubclient.p12 --cacert /home/pi/.ssh/ca.crt -d path=films https://localhost:5443/folderItems
 
 openssl pkcs12 -in /home/mbaros/projects/my/python/NasFileSyncRestService/nas_samba_rest/certs/iothubclient.p12
 
@@ -199,8 +213,31 @@ $ sudo systemctl stop nassambarest
 $ sudo systemctl restart nassambarest
 $ sudo systemctl status nassambarest
 
-sudo journalctl -u microblog -f
+sudo journalctl -u nassambarest -f
 
+Permission
+
+/etc/passwd – Contains one line for each user account.
+/etc/group – Defines the groups on the system.
+
+groups caddy
+grep "^developers" /etc/group
+
+read for all groups
+chmod g+r /home/pi/.ssh/caddyclient.key
+
+Then change the file permissions to allow read access to the members of the caddy group:
+
+chgrp caddy /home/grafh/file.txt
+
+To allow caddy user to read the file:
+
+setfacl -m u:caddy:r /home/grafh/file.txt
+
+list of all groups for a user
+> groups
+
+add pi to the caddy's group
 
 Tutorial
 https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-20-04
