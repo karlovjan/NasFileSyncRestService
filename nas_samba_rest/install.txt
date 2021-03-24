@@ -5,10 +5,14 @@ https://uwsgi-docs.readthedocs.io/en/latest/WSGIquickstart.html
 https://uwsgi-docs.readthedocs.io/en/latest/Options.html?highlight=manage-script-name
 
 Set SECRET_KEY
+for secure user session and cookies
+https://flask.palletsprojects.com/en/1.0.x/quickstart/#sessions
+https://explore-flask.readthedocs.io/en/latest/configuration.html
 https://flask.palletsprojects.com/en/1.1.x/config/
 python -c 'import os; print(os.urandom(16))'
 
-SECRET_KEY = b'_5#y2L"F4Q8z\n\xec]/'
+ulozit do konfiguracniho souboru, nemelo by pak byt ulozeno v gitu
+SECRET_KEY = ..tajne...
 
 If you have the debugger disabled or trust the users on your network,
 you can make the server publicly available simply by adding --host=0.0.0.0
@@ -74,7 +78,7 @@ password-protected: B   m  75...3
 
 openssl req -new -x509 -days 365 -key ca.key -out ca.crt
 vypln vsechny udaje
-CZ, Czechia, Prague, Baros, nas, nas.local, nas@nas.local
+CZ, Czechia, Prague, Baros, nas, [server name] nas.local nebo smrest.home, nas@nas.local
 
 
 Generate your server key, certificate signing request CSR

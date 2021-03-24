@@ -18,4 +18,3 @@ JSON_AS_ASCII = True
 # MY APP SETTINGS
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'avi'}
 SAMBA_ROOT_FOLDER_PATH = '/media/nasraid1/shared/public'
-SECRET_KEY = b'g~\xf6R\xd6\xa6\x9da\x0f\x9b\xf1\xc2\xba</l'
