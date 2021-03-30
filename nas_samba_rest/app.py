@@ -141,7 +141,7 @@ def upload_file():
             filename = secure_filename(f.filename)
             filepath = os.path.join(app.config["SAMBA_ROOT_FOLDER_PATH"], dest, filename)
             f.save(filepath)
-            os.utime(filepath, mtimint, mtimint)
+            os.utime(filepath, (mtimint, mtimint))
             return jsonify(message='OK'), 200
 
 
