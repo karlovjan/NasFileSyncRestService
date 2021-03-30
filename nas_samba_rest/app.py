@@ -126,14 +126,21 @@ def upload_file():
         if 'dest' not in request.form:
             # Bad request, 400
             return jsonify(message='ERROR - dest attribute is missing'), 400
+        if 'mtime' not in request.form:
+            # Bad request, 400
+            return jsonify(message='ERROR - mtime attribute is missing'), 400
         dest = request.form['dest']
         log.info(f'dest: {dest}')
+        mtime = request.form['mtime']
+        log.info(f'dest: {mtime} in seconds')
         if dest == '':
             # Bad request, 400
             return jsonify(message='ERROR - dest attribute is empty'), 400
         if f and allowed_file(f.filename):
             filename = secure_filename(f.filename)
-            f.save(os.path.join(app.config["SAMBA_ROOT_FOLDER_PATH"], dest, filename))
+            filepath = os.path.join(app.config["SAMBA_ROOT_FOLDER_PATH"], dest, filename)
+            f.save(filepath)
+            os.utime(filepath, (mtime, mtime))
             return jsonify(message='OK'), 200
 
 
