@@ -133,6 +133,7 @@ def upload_file():
         log.info(f'dest: {dest}')
         mtime = request.form['mtime']
         log.info(f'dest: {mtime} in seconds')
+        mtimint = int(mtime)
         if dest == '':
             # Bad request, 400
             return jsonify(message='ERROR - dest attribute is empty'), 400
@@ -140,7 +141,7 @@ def upload_file():
             filename = secure_filename(f.filename)
             filepath = os.path.join(app.config["SAMBA_ROOT_FOLDER_PATH"], dest, filename)
             f.save(filepath)
-            os.utime(filepath, (mtime, mtime))
+            os.utime(filepath, mtimint, mtimint)
             return jsonify(message='OK'), 200
 
 
