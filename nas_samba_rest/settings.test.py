@@ -16,5 +16,6 @@ SERVER_NAME = 'localhost.home:5001'
 MAX_CONTENT_LENGTH = 1 * 1024 * 1024 * 1024
 JSON_AS_ASCII = True
 # MY APP SETTINGS
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp4', 'avi'}
+ALLOWED_EXTENSIONS = {'image': ['jpg', 'jpeg', 'gif', 'png', 'dng'], 'video': ['mp4', 'avi', 'mkv'],
+                      'doc': ['txt', 'pdf', 'odt', 'docx', 'doc']}
 SAMBA_ROOT_FOLDER_PATH = '/media/nasraid1/shared/public'
