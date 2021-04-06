@@ -94,8 +94,40 @@ def get_file_items(folder_path, from_date_int, to_date_int, file_type):
     return items
 
 
-# curl -d path=Documents/scripts http://127.0.0.1:5001/folderItems
+def get_samba_folders(from_path):
+    with os.scandir(from_path) as it:
+        for entry in it:
+            if not entry.name.startswith('.') and entry.is_dir(follow_symlinks=False):
+                yield entry.path
+                yield from get_samba_folders(entry.path)
+
+
+# curl -d path=Documents/scripts http://localhost.localdomain:5001/folderItems
+# curl -d path=Documents/scripts http://localhost.localdomain:5001/folders
 # curl -d "path=Pictures/Prukaz&from=1526601600.0&to=1558742400.0&type=image" http://localhost.localdomain:5001/folderItems
+
+@app.route('/folders', methods=['POST'])
+@cross_origin()
+def list_folders():
+    if request.method == 'POST':
+        if 'path' not in request.form:
+            # Bad request, 400
+            return jsonify(message='ERROR - path (root folder path) attribute is missing'), 400
+
+        path = request.form['path']
+        log.info(f'path: {path}')
+        if path == '':
+            # Bad request, 400
+            return jsonify(message='ERROR - path attribute is empty'), 400
+
+        from_path = os.path.join(app.config["SAMBA_ROOT_FOLDER_PATH"], path)
+        dir_list = [os.path.relpath(folder, from_path) for folder in get_samba_folders(from_path)]
+        return jsonify(dir_list)
+        # Enable Access-Control-Allow-Origin
+        # response.headers.add("Access-Control-Allow-Origin", "*")
+        # return response
+    else:
+        return jsonify({}), 400
 
 
 @app.route('/folderItems', methods=['POST'])
@@ -118,7 +150,7 @@ def get_folder_items():
         log.info(f'path: {path}')
         if path == '':
             # Bad request, 400
-            return jsonify(message='ERROR - dest attribute is empty'), 400
+            return jsonify(message='ERROR - path attribute is empty'), 400
         from_date_int = float(request.form['from'])
         log.info(f'from: {from_date_int}')
         to_date_int = float(request.form['to'])
