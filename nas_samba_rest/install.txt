@@ -249,6 +249,8 @@ sudo nano /etc/caddy/Caddyfile
 Reload the configuration:
 >sudo systemctl reload caddy
 
+Logs
+sudo journalctl -u caddy.service -f
 
 Tutorial
 https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-20-04
